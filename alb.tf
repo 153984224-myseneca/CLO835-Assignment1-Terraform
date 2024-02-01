@@ -18,6 +18,16 @@ resource "aws_security_group" "alb_sg" {
   name        = "${var.prefix}-alb-sg"
   description = "ALB Security Group"
   vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    description      = "HTTP from everywhere"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
 }
 
 resource "aws_lb_listener" "web_listener" {
