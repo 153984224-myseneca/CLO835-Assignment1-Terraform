@@ -97,6 +97,9 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+# resource "aws_iam_instance_profile" "ec2_instance_profile" {
+#   name = "LabInstanceProfile"
+# }
 
 resource "aws_instance" "my_amazon" {
   ami                         = data.aws_ami.latest_amazon_linux.id
@@ -106,6 +109,7 @@ resource "aws_instance" "my_amazon" {
   associate_public_ip_address = true
   security_groups             = [aws_security_group.web_sg.id]
   # iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
+  iam_instance_profile        = "LabInstanceProfile"
   user_data                   = file("${path.module}/install_docker.sh")
   tags = merge(var.default_tags,
     {

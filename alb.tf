@@ -27,6 +27,14 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+  
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 
 }
 
@@ -52,6 +60,17 @@ resource "aws_lb_target_group" "tg1" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
   target_type = "instance"
+
+  health_check {
+    enabled             = true
+    interval            = 300 
+    path                = "/" 
+    protocol            = "HTTP"
+    timeout             = 5   
+    healthy_threshold   = 2   
+    unhealthy_threshold = 10  
+    matcher             = "200-399" 
+  }
 }
 
 resource "aws_lb_target_group" "tg2" {
@@ -60,6 +79,17 @@ resource "aws_lb_target_group" "tg2" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
   target_type = "instance"
+  
+  health_check {
+    enabled             = true
+    interval            = 300 
+    path                = "/" 
+    protocol            = "HTTP"
+    timeout             = 5   
+    healthy_threshold   = 2   
+    unhealthy_threshold = 10  
+    matcher             = "200-399" 
+  }
 }
 
 resource "aws_lb_target_group" "tg3" {
@@ -68,6 +98,17 @@ resource "aws_lb_target_group" "tg3" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
   target_type = "instance"
+  
+  health_check {
+    enabled             = true
+    interval            = 300 
+    path                = "/" 
+    protocol            = "HTTP"
+    timeout             = 5   
+    healthy_threshold   = 2   
+    unhealthy_threshold = 10  
+    matcher             = "200-399" 
+  }
 }
 
 resource "aws_lb_target_group_attachment" "attach_ec2_to_tg1" {
@@ -101,7 +142,7 @@ resource "aws_lb_listener_rule" "listener_rule1" {
 
   condition {
     path_pattern {
-      values = ["/lime/*", "/lime"]
+      values = ["/blue/*", "/blue"]
     }
   }
 }
@@ -133,7 +174,7 @@ resource "aws_lb_listener_rule" "listener_rule3" {
 
   condition {
     path_pattern {
-      values = ["/blue/*", "/blue"]
+      values = ["/lime/*", "/lime"]
     }
   }
 }
